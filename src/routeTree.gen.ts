@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CalcsIndexRouteImport } from './routes/calcs/index'
+import { Route as CalcsDcaRouteImport } from './routes/calcs/dca'
 
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
@@ -22,31 +24,49 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CalcsIndexRoute = CalcsIndexRouteImport.update({
+  id: '/calcs/',
+  path: '/calcs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalcsDcaRoute = CalcsDcaRouteImport.update({
+  id: '/calcs/dca',
+  path: '/calcs/dca',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calcs/dca': typeof CalcsDcaRoute
+  '/calcs': typeof CalcsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calcs/dca': typeof CalcsDcaRoute
+  '/calcs': typeof CalcsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/calcs/dca': typeof CalcsDcaRoute
+  '/calcs/': typeof CalcsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths: '/' | '/about' | '/calcs/dca' | '/calcs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to: '/' | '/about' | '/calcs/dca' | '/calcs'
+  id: '__root__' | '/' | '/about' | '/calcs/dca' | '/calcs/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  CalcsDcaRoute: typeof CalcsDcaRoute
+  CalcsIndexRoute: typeof CalcsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/calcs/': {
+      id: '/calcs/'
+      path: '/calcs'
+      fullPath: '/calcs'
+      preLoaderRoute: typeof CalcsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calcs/dca': {
+      id: '/calcs/dca'
+      path: '/calcs/dca'
+      fullPath: '/calcs/dca'
+      preLoaderRoute: typeof CalcsDcaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  CalcsDcaRoute: CalcsDcaRoute,
+  CalcsIndexRoute: CalcsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
